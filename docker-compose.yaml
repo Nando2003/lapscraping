@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  lapscraping:
+    build: .
+    container_name: lapscraping
+    volumes:
+      - ./lapscraping:/lapscraping
+    ports:
+      - 3100:8000
+    env_file:
+      - ./dotenv_files/.env
+    restart: unless-stopped
+    

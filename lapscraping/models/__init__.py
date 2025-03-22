@@ -1,0 +1,3 @@
+from .laptop_config_model import LaptopConfigModel
+from .laptop_model import LaptopModel
+from .laptop_review_model import LaptopReviewModel
