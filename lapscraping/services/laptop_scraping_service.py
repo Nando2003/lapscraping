@@ -5,6 +5,7 @@ from models import (LaptopConfigModel,
 from config.settings import Settings
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup, Tag
+from typing import Optional
 import re
 
 
@@ -13,27 +14,36 @@ class LaptopScrapingService:
     def __init__(self):
         self.laptop_store = LaptopStore()
         
-    def get_laptops(self):
+    def get_laptops(self, search_name: Optional[str] = None):
         laptops: list[LaptopModel] = []
         
         main_content = self.laptop_store.get_page_content()
         soup = BeautifulSoup(main_content, "html.parser")
         
         hdd_prices = self._get_hdd_prices(soup)
-        hrefs = self._get_href_from_laptops_cards(soup)
+        names_and_hrefs = self._get_names_and_href_from_laptops_cards(soup)
         max_page = self._get_last_page(soup)
         
-        for href in hrefs:
+        for name, href in names_and_hrefs:
+            
+            if search_name and search_name.lower() not in name.lower():
+                continue # Se o nome não estiver na busca, pula
+            
             laptop_content = self.laptop_store.get_page_content(href)
             laptop_soup = BeautifulSoup(laptop_content, "html.parser")
             laptops.append(self._get_laptop(laptop_soup, hdd_prices))
             
         for page in range(2, max_page + 1):
+            
             other_content = self.laptop_store.get_page_content(f"?page={page}")
             soup = BeautifulSoup(other_content, "html.parser")
-            hrefs = self._get_href_from_laptops_cards(soup)
+            names_and_hrefs = self._get_names_and_href_from_laptops_cards(soup)
             
-            for href in hrefs:
+            for name, href in names_and_hrefs:
+                
+                if search_name and search_name.lower() not in name.lower():
+                    continue # Se o nome não estiver na busca, pula
+            
                 laptop_content = self.laptop_store.get_page_content(href)
                 laptop_soup = BeautifulSoup(laptop_content, "html.parser")
                 laptops.append(self._get_laptop(laptop_soup, hdd_prices))
@@ -217,9 +227,9 @@ class LaptopScrapingService:
             for hdd, adicional in matches
         }
         
-    def _get_href_from_laptops_cards(self, soup: BeautifulSoup) -> list[str]:
+    def _get_names_and_href_from_laptops_cards(self, soup: BeautifulSoup) -> list[tuple[str, str]]:
         product_cards = soup.select("div.col-md-4.col-xl-4.col-lg-4")
-        hrefs: list[str] = []
+        hrefs: list[tuple[str, str]] = []
         
         for card in product_cards:
             caption = card.select_one("div.caption")
@@ -232,12 +242,13 @@ class LaptopScrapingService:
             if not title_tag:
                 continue
             
+            name = title_tag.text.strip()
             href = title_tag.get("href")
             
             if not href:
                 continue
             
-            hrefs.append(str(href))
+            hrefs.append((str(name), str(href)))
             
         return hrefs  
         

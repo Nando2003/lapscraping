@@ -11,15 +11,21 @@ SortOptions = Literal["price", "name", "ram", "hdd", "reviews", "stars"]
 
 
 @router.get("/laptops", response_model=list[LaptopModel],)
-def get_laptops(sort_by: Optional[SortOptions] = Query(default=None), reverse: bool = Query(default=False)):
+def get_laptops(
+    sort_by: Optional[SortOptions] = Query(default=None),
+    reverse: Optional[bool] = Query(default=None),
+    search_by_name: Optional[str] = Query(default=None)
+):
     """
-    Rota para obter laptops da loja, com ordenação.
+    Rota para obter laptops da loja, com ordenação e filtro por nome.
 
     Parâmetros:
     - sort_by: 'price', 'name', 'ram', 'hdd', 'reviews', 'stars'
+    - reverse: inverte a ordenação
+    - search: filtra por parte do nome (case-insensitive)
     """
     try:
-        laptops = service.get_laptops()
+        laptops = service.get_laptops(search_by_name)
         
         try:
             if sort_by:
@@ -42,7 +48,7 @@ def get_laptops(sort_by: Optional[SortOptions] = Query(default=None), reverse: b
                 elif sort_by == "stars":
                     laptops.sort(key=lambda laptop: laptop.reviews.stars, reverse=True)
                 
-                if reverse:
+                if isinstance(reverse, bool) and reverse:
                     laptops.reverse()
             
         except Exception as e:
