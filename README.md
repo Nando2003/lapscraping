@@ -73,3 +73,6 @@ LapScraping é um serviço de Scraping de Laptops do site: https://webscraper.io
 
 - **BS4:** Foi usada para extrair informações importantes do HTML
 
+##
+![alt text](docs/example.png)
+##
