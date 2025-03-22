@@ -22,7 +22,7 @@ def get_laptops(
     Parâmetros:
     - sort_by: 'price', 'name', 'ram', 'hdd', 'reviews', 'stars'
     - reverse: inverte a ordenação
-    - search: filtra por parte do nome (case-insensitive)
+    - search_by_name: filtra por parte do nome (case-insensitive)
     """
     try:
         laptops = service.get_laptops(search_by_name)
