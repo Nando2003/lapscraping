@@ -35,24 +35,24 @@ LapScraping é um serviço de Scraping de Laptops do site: https://webscraper.io
         {
             "name": "string",
             "configs": {
-            "screen_spec": "string",
-            "cpu": "string",
-            "ram": "string",
-            "hdd": "string",
-            "os": "string",
-            "graphics_card": "string",
-            "keyboard_layout": "string"
+                "screen_spec": "string",
+                "cpu": "string",
+                "ram": "string",
+                "hdd": "string",
+                "os": "string",
+                "graphics_card": "string",
+                "keyboard_layout": "string"
             },
             "base_price": 0,
             "image_url": "string",
             "reviews": {
-            "stars": 0,
-            "amont_of_reviews": 0
+                "stars": 0,
+                "amont_of_reviews": 0
             },
-            "price_variations": {
-            "additionalProp1": 0,
-            "additionalProp2": 0,
-            "additionalProp3": 0
+                "price_variations": {
+                "additionalProp1": 0,
+                "additionalProp2": 0,
+                "additionalProp3": 0
             }
         }
     ]
@@ -63,7 +63,7 @@ LapScraping é um serviço de Scraping de Laptops do site: https://webscraper.io
 
 ## Tecnologias usadas:
 
-- **Python 3.12.X**
+- **Python 3.10.X**
 
 - **Tenacity:** Foi usada caso a requisição para o site falhe
 
